@@ -13,18 +13,24 @@ export default function Assessment() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <main className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 flex items-center justify-center px-6">
+      <main className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 flex items-center justify-center px-4 sm:px-6 py-10">
         <div className="w-full max-w-2xl">
           <div className="mb-8 text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight">Free Assessment</h1>
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Free Assessment</h1>
             <p className="mt-2 text-gray-600 dark:text-gray-300">
               Tell me a bit about you. I’ll get back within 24 hours.
             </p>
           </div>
 
           {state.succeeded ? (
-            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl p-8 text-center">
-              <p className="text-green-600 dark:text-green-400 font-semibold">Thanks! Your message was sent.</p>
+            <div
+              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl p-8 text-center"
+              role="status"
+              aria-live="polite"
+            >
+              <p className="text-green-600 dark:text-green-400 font-semibold">
+                Thanks! Your message was sent.
+              </p>
               <div className="mt-6">
                 <Link href="/" className="text-red-600 hover:underline">← Back to Home</Link>
               </div>
@@ -32,17 +38,21 @@ export default function Assessment() {
           ) : (
             <form
               onSubmit={handleSubmit}
+              action="https://formspree.io/f/xwpndrgp"   // graceful no-JS fallback
+              method="POST"
+              acceptCharset="UTF-8"
               className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 space-y-5"
             >
-              {/* Optional subject to control email subject line */}
+              {/* Optional subject + basic spam trap */}
               <input type="hidden" name="_subject" value="New Assessment Request – S3THIFIT" />
-              {/* Optional honeypot field to reduce spam */}
               <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" />
+              <input type="hidden" name="page" value="assessment" />
 
+              <label htmlFor="name" className="sr-only">Your Name</label>
               <input
                 id="name"
                 name="name"
-                autoComplete='name'
+                autoComplete="name"
                 type="text"
                 placeholder="Your Name"
                 required
@@ -50,20 +60,23 @@ export default function Assessment() {
               />
               <ValidationError prefix="Name" field="name" errors={state.errors} />
 
+              <label htmlFor="phone" className="sr-only">Phone Number</label>
               <input
                 id="phone"
                 name="phone"
-                autoComplete='tel'
+                autoComplete="tel"
+                inputMode="tel"
                 type="tel"
                 placeholder="Phone Number"
                 className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 outline-none focus:ring-2 focus:ring-red-500"
               />
               <ValidationError prefix="Phone" field="phone" errors={state.errors} />
 
+              <label htmlFor="email" className="sr-only">Email</label>
               <input
                 id="email"
                 name="email"
-                autoComplete='email'
+                autoComplete="email"
                 type="email"
                 placeholder="Email"
                 required
@@ -71,6 +84,7 @@ export default function Assessment() {
               />
               <ValidationError prefix="Email" field="email" errors={state.errors} />
 
+              <label htmlFor="message" className="sr-only">How can I help you?</label>
               <textarea
                 id="message"
                 name="message"
