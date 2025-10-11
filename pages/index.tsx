@@ -1,36 +1,105 @@
-// pages/index.tsx
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function Home() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [mobileOpen, setMobileOpen] = useState(false);
+
+// --- Google Reviews Component ---
+function GoogleReviews() {
+  const [reviews, setReviews] = useState<{ author_name: string; rating: number; text: string; relative_time_description?: string; profile_photo_url?: string; }[]>([]);
+  const [loadedFromServer, setLoadedFromServer] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      const AOS = (await import('aos')).default;
-      AOS.init({ duration: 800, once: true });
-    })();
-
-    const stored = localStorage.getItem('theme');
-    if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setTheme('dark');
-      document.documentElement.classList.add('dark');
-    } else {
-      setTheme('light');
-      document.documentElement.classList.remove('dark');
+    async function fetchServerReviews() {
+      try {
+        const res = await fetch('/api/reviews?limit=6&star=5');
+        const json = await res.json();
+        if (json?.reviews?.length) {
+          setReviews(json.reviews);
+          setLoadedFromServer(json.source === 'google');
+        }
+      } catch (e) {
+        console.error('Server reviews fetch failed', e);
+      }
     }
+    fetchServerReviews();
   }, []);
 
-  const toggleTheme = () => {
-    const html = document.documentElement;
-    const next = html.classList.contains('dark') ? 'light' : 'dark';
-    html.classList.toggle('dark', next === 'dark');
-    localStorage.setItem('theme', next);
-    setTheme(next);
-  };
+  const fallback = [
+    { author_name: 'Emma R.', rating: 5, text: 'Sunil helped me lose 15 lbs in 8 weeks. The weekly check-ins and personalized plan were a game-changer!' },
+    { author_name: 'Michael T.', rating: 5, text: 'The best trainer I’ve worked with. Form cues were on point and the program was actually fun to stick to.' },
+    { author_name: 'Priya S.', rating: 5, text: 'Great experience! Nutrition guidance plus workouts made it easy to stay consistent and see results.' },
+  ];
+
+  const data = reviews.length ? reviews : fallback;
+
+  return (
+    <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8" id="google-reviews">
+      {data.map((r, idx) => (
+        <div key={idx} className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 shadow-sm">
+          <div className="flex items-center gap-3 mb-2">
+            {r.profile_photo_url ? (
+              <img src={r.profile_photo_url} alt={r.author_name} className="h-10 w-10 rounded-full object-cover" />
+            ) : (
+              <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-800" />
+            )}
+            <div>
+              <p className="font-semibold text-gray-900 dark:text-white">{r.author_name}</p>
+              <div className="flex items-center text-yellow-500" aria-label={`${r.rating} star rating`}>
+                {'★★★★★'.slice(0, Math.round(r.rating))}
+              </div>
+            </div>
+          </div>
+          <p className="text-gray-700 dark:text-gray-300">“{r.text}”</p>
+          {r.relative_time_description && (
+            <p className="mt-2 text-xs text-gray-500">{r.relative_time_description}</p>
+          )}
+          {loadedFromServer && (
+            <p className="mt-3 text-xs text-gray-500">Source: Google Reviews</p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default function Home() {
+  const [theme, setTheme] = useState('light');
+const [mobileOpen, setMobileOpen] = useState(false);
+
+useEffect(() => {
+  // Initialize theme from localStorage or system preference
+  const stored = localStorage.getItem('theme');
+  if (stored) {
+    setTheme(stored);
+  } else {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(prefersDark ? 'dark' : 'light');
+  }
+}, []);
+
+useEffect(() => {
+  // Apply the theme class to the document element whenever the theme changes
+  if (theme === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+  // Save the theme to localStorage
+  localStorage.setItem('theme', theme);
+}, [theme]);
+
+useEffect(() => {
+  // Initialize AOS library
+  (async () => {
+    const AOS = (await import('aos')).default;
+    AOS.init({ duration: 800, once: true });
+  })();
+}, []);
+
+const toggleTheme = () => {
+  setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
+};
 
   const closeMobile = () => setMobileOpen(false);
 
@@ -71,9 +140,9 @@ export default function Home() {
         'Reduce body-fat while protecting muscle via strength work, protein-forward nutrition, and metabolic conditioning.',
     },
     {
-      title: 'Nutrition',
+      title: 'Nutrition Guidance',
       desc:
-        'Simple, personalized plans that fit your culture and lifestyle—macros, meal structure, and habits you can keep.',
+        'Discover practical nutrition guidance to support your workouts and overall health. No extremes-just smart, sustainable choices for lasting results.',
     },
   ];
 
@@ -91,7 +160,19 @@ export default function Home() {
       <Head>
         <title>S3THIFIT – Stronger Every Day</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
       </Head>
+<style jsx global>{`
+        .brand-font {
+          font-family: 'Bebas Neue', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+          letter-spacing: 0.02em;
+        }
+        h1, h2, h3, .header-font {
+          font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        }
+      `}</style>
 
       {/* NAVBAR */}
       <nav className="fixed inset-x-0 top-0 z-50 border-b border-gray-200/60 dark:border-gray-800/60 bg-white/85 dark:bg-gray-900/85 backdrop-blur-md">
@@ -107,7 +188,7 @@ export default function Home() {
                 priority
                 className="h-9 w-9 rounded-full object-cover"
               />
-              <span className="text-xl sm:text-2xl font-bold text-red-600">S3THIFIT</span>
+              <span className="text-xl sm:text-2xl font-bold text-red-600 brand-font">S3THIFIT</span>
             </Link>
 
             {/* Desktop links */}
@@ -140,9 +221,9 @@ export default function Home() {
                 className="border border-gray-300 dark:border-gray-700 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition"
               >
                 {theme === 'dark' ? (
-                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M12 4v2m0 12v2m8-8h-2M6 12H4m12.95 6.95-1.414-1.414M8.464 8.464 7.05 7.05m10.607 0-1.414 1.414M8.464 15.536 7.05 16.95" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M12 4v2m0 12v2m8-8h-2M6 12H4m12.95 6.95-1.414-1.414M8.464 8.464 7.05 7.05m10.607 0-1.414 1.414M8.464 15.536 7.05 16.95" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
                 ) : (
-                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 )}
               </button>
               <button
@@ -153,9 +234,9 @@ export default function Home() {
                 className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
               >
                 {mobileOpen ? (
-                  <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none"><path d="M6 18L18 6M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                  <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none"><path d="M6 18L18 6M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
                 ) : (
-                  <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                  <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
                 )}
               </button>
             </div>
@@ -246,7 +327,7 @@ export default function Home() {
         >
           <div data-aos="fade-right">
             <Image
-              src="/images/body.JPG"
+              src="/images/writing.jpg"
               alt="Sunil Portrait"
               width={800}
               height={800}
@@ -313,7 +394,31 @@ export default function Home() {
         </section>
 
         {/* CUSTOMER REVIEWS & TRANSFORMATIONS */}
-        <section id="reviews" className="scroll-mt-24 mx-auto max-w-7xl px-4 sm:px-6 py-12 sm:py-16">
+        
+        {/* GOOGLE REVIEW CTA */}
+        <section id="leave-review" className="py-12 sm:py-16 bg-red-50 dark:bg-gray-900/40">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <div className="rounded-2xl border border-red-100 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 sm:p-10 shadow-lg">
+              <h2 className="text-2xl sm:text-3xl font-extrabold header-font text-gray-900 dark:text-white text-center">
+                Love your training? Leave a Google Review
+              </h2>
+              <p className="mt-2 text-center text-gray-600 dark:text-gray-300">
+                Your feedback helps others find S3THIFIT and keeps this community growing.
+              </p>
+              <div className="mt-6 flex justify-center">
+                <a
+                  href="https://share.google/udFdYQRa4gZEHmzub"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center rounded-xl bg-red-600 px-6 py-3 text-white font-semibold shadow-md hover:bg-red-700 transition"
+                >
+                  Leave a Google Review
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+<section id="reviews" className="scroll-mt-24 mx-auto max-w-7xl px-4 sm:px-6 py-12 sm:py-16">
           <header className="mb-8 sm:mb-12 text-center" data-aos="fade-up">
             <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Customer Reviews</h3>
             <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-300">
@@ -321,30 +426,8 @@ export default function Home() {
             </p>
           </header>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {[
-              { quote: 'Sunil helped me lose 15 lbs in 8 weeks. His personalized plan was a game-changer!', name: 'Emma R.', rating: 5 },
-              { quote: 'I gained muscle and confidence. Highly recommend his 1-on-1 coaching.', name: 'David L.', rating: 5 },
-              { quote: 'Flexible online sessions fit my schedule perfectly. Amazing results.', name: 'Priya S.', rating: 5 },
-            ].map((r, i) => (
-              <article
-                key={i}
-                className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2"
-                data-aos={['fade-right', 'fade-up', 'fade-left'][i]}
-                data-aos-delay={i * 150}
-              >
-                <div className="mb-3 sm:mb-4 flex items-center gap-1" aria-label={`${r.rating} out of 5 stars`}>
-                  {Array.from({ length: r.rating }).map((_, s) => (
-                    <svg key={s} className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.802 2.035a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.802-2.035a1 1 0 00-1.175 0l-2.802 2.035c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.88 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <blockquote className="italic text-gray-700 dark:text-gray-300 text-sm sm:text-base">“{r.quote}”</blockquote>
-                <p className="mt-4 sm:mt-6 font-semibold text-red-600">— {r.name}</p>
-              </article>
-            ))}
-          </div>
+          {/* Google Reviews (auto-fetch if API keys provided; otherwise uses fallback) */}
+          <GoogleReviews />
 
           <div className="mt-12 sm:mt-16" data-aos="fade-up">
             <h4 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white mb-4 sm:mb-6">
@@ -352,9 +435,11 @@ export default function Home() {
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
               {[
-                { src: '/images/wideshot.JPG', alt: 'Client transformation 1', cap: 'S3THIFIT Success Story' },
-                { src: '/images/photo2.png',   alt: 'Client transformation 2', cap: 'Confidence & Strength Gained' },
-                { src: '/images/photo1.png',   alt: 'Client transformation 3', cap: 'Healthier, Leaner, Stronger' },
+                { src: '/images/photo2.png', alt: 'Client transformation 2', cap: 'Confidence & Strength Gained' },
+                { src: '/images/photo1.png', alt: 'Client transformation 3', cap: 'Healthier, Leaner, Stronger' },
+                { src: '/images/client1.jpg', alt: 'Client transformation 4', cap: 'Sustainable Fat Loss' },
+                { src: '/images/client2.jpg', alt: 'Client transformation 5', cap: 'Building Muscle Safely' },
+                { src: '/images/client3.jpg', alt: 'Client transformation 6', cap: 'Endurance & Stamina Boost' },
               ].map((img) => (
                 <figure key={img.src} className="group relative overflow-hidden rounded-xl shadow-lg">
                   <Image
