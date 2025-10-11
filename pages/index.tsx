@@ -4,9 +4,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 
-// --- Google Reviews Component ---
+type Review = {
+  author_name: string;
+  rating: number;
+  text: string;
+  relative_time_description?: string;
+  profile_photo_url?: string;
+};
+
 function GoogleReviews() {
-  const [reviews, setReviews] = useState<{ author_name: string; rating: number; text: string; relative_time_description?: string; profile_photo_url?: string; }[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loadedFromServer, setLoadedFromServer] = useState(false);
 
   useEffect(() => {
@@ -15,7 +22,7 @@ function GoogleReviews() {
         const res = await fetch('/api/reviews?limit=6&star=5');
         const json = await res.json();
         if (json?.reviews?.length) {
-          setReviews(json.reviews);
+          setReviews(json.reviews as Review[]); // type assertion to satisfy TS
           setLoadedFromServer(json.source === 'google');
         }
       } catch (e) {
@@ -25,13 +32,15 @@ function GoogleReviews() {
     fetchServerReviews();
   }, []);
 
-  const fallback = [
+  // ✅ Explicitly type the fallback
+  const fallback: Review[] = [
     { author_name: 'Emma R.', rating: 5, text: 'Sunil helped me lose 15 lbs in 8 weeks. The weekly check-ins and personalized plan were a game-changer!' },
     { author_name: 'Michael T.', rating: 5, text: 'The best trainer I’ve worked with. Form cues were on point and the program was actually fun to stick to.' },
     { author_name: 'Priya S.', rating: 5, text: 'Great experience! Nutrition guidance plus workouts made it easy to stay consistent and see results.' },
   ];
 
-  const data = reviews.length ? reviews : fallback;
+  // ✅ And type the chosen data too
+  const data: Review[] = reviews.length ? reviews : fallback;
 
   return (
     <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8" id="google-reviews">
