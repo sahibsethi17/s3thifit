@@ -3,6 +3,24 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 
+// Instagram icon (Feather-style, matches current IG glyph)
+const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    {...props}
+  >
+    <rect x="3" y="3" width="18" height="18" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+  </svg>
+);
+
 
 type Review = {
   author_name: string;
@@ -19,8 +37,12 @@ function GoogleReviews() {
   useEffect(() => {
     async function fetchServerReviews() {
       try {
-        const res = await fetch('/api/reviews?limit=6&star=5');
-        const json = await res.json();
+        const url =
+          process.env.NODE_ENV === 'development'
+            ? '/api/reviews?nocache=1&limit=6&star=5'
+            : '/api/reviews?limit=6&star=5';
+
+        const res = await fetch(url); const json = await res.json();
         if (json?.reviews?.length) {
           setReviews(json.reviews as Review[]); // type assertion to satisfy TS
           setLoadedFromServer(json.source === 'google');
@@ -74,41 +96,41 @@ function GoogleReviews() {
 
 export default function Home() {
   const [theme, setTheme] = useState('light');
-const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-useEffect(() => {
-  // Initialize theme from localStorage or system preference
-  const stored = localStorage.getItem('theme');
-  if (stored) {
-    setTheme(stored);
-  } else {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setTheme(prefersDark ? 'dark' : 'light');
-  }
-}, []);
+  useEffect(() => {
+    // Initialize theme from localStorage or system preference
+    const stored = localStorage.getItem('theme');
+    if (stored) {
+      setTheme(stored);
+    } else {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(prefersDark ? 'dark' : 'light');
+    }
+  }, []);
 
-useEffect(() => {
-  // Apply the theme class to the document element whenever the theme changes
-  if (theme === 'dark') {
-    document.documentElement.classList.add('dark');
-  } else {
-    document.documentElement.classList.remove('dark');
-  }
-  // Save the theme to localStorage
-  localStorage.setItem('theme', theme);
-}, [theme]);
+  useEffect(() => {
+    // Apply the theme class to the document element whenever the theme changes
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    // Save the theme to localStorage
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
-useEffect(() => {
-  // Initialize AOS library
-  (async () => {
-    const AOS = (await import('aos')).default;
-    AOS.init({ duration: 800, once: true });
-  })();
-}, []);
+  useEffect(() => {
+    // Initialize AOS library
+    (async () => {
+      const AOS = (await import('aos')).default;
+      AOS.init({ duration: 800, once: true });
+    })();
+  }, []);
 
-const toggleTheme = () => {
-  setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
-};
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
+  };
 
   const closeMobile = () => setMobileOpen(false);
 
@@ -169,11 +191,11 @@ const toggleTheme = () => {
       <Head>
         <title>S3THIFIT – Stronger Every Day</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
       </Head>
-<style jsx global>{`
+      <style jsx global>{`
         .brand-font {
           font-family: 'Bebas Neue', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
           letter-spacing: 0.02em;
@@ -212,14 +234,27 @@ const toggleTheme = () => {
                   </a>
                 </li>
               ))}
+              {/* Instagram (desktop) */}
               <li>
+                <a
+                  href="https://www.instagram.com/s3thifit"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-gray-300 dark:border-gray-700 px-3 py-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                  aria-label="Follow on Instagram @s3thifit"
+                >
+                  <InstagramIcon className="h-4 w-4" />
+                  @s3thifit
+                </a>
+              </li>
+              {/* <li>
                 <button
                   onClick={toggleTheme}
                   className="border border-gray-300 dark:border-gray-700 px-3 py-1 rounded-full text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition"
                 >
                   {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                 </button>
-              </li>
+              </li> */}
             </ul>
 
             {/* Mobile buttons */}
@@ -269,6 +304,20 @@ const toggleTheme = () => {
                 </a>
               </li>
             ))}
+            {/* Instagram (mobile) */}
+            <li>
+              <a
+                href="https://www.instagram.com/s3thifit"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closeMobile}
+                className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+                aria-label="Follow on Instagram @s3thifit"
+              >
+                <InstagramIcon className="h-5 w-5" />
+                <span>@s3thifit</span>
+              </a>
+            </li>
             <li>
               <Link
                 href="/assessment"
@@ -347,7 +396,7 @@ const toggleTheme = () => {
           <div className="flex flex-col justify-center" data-aos="fade-left">
             <h2 className="text-2xl sm:text-3xl font-bold text-red-600 mb-3 sm:mb-4">Hi, I’m Sunil Sethi</h2>
             <p className="text-base sm:text-lg leading-relaxed mb-4">
-              I’m a certified personal trainer & nutrition coach. For over 5 years I’ve helped busy
+              I’m a certified personal trainer. For over 5 years I’ve helped busy
               professionals transform their bodies & habits with sustainable, fun programs.
             </p>
             <Link
@@ -403,7 +452,7 @@ const toggleTheme = () => {
         </section>
 
         {/* CUSTOMER REVIEWS & TRANSFORMATIONS */}
-        
+
         {/* GOOGLE REVIEW CTA */}
         <section id="leave-review" className="py-12 sm:py-16 bg-red-50 dark:bg-gray-900/40">
           <div className="mx-auto max-w-5xl px-4 sm:px-6">
@@ -427,7 +476,7 @@ const toggleTheme = () => {
             </div>
           </div>
         </section>
-<section id="reviews" className="scroll-mt-24 mx-auto max-w-7xl px-4 sm:px-6 py-12 sm:py-16">
+        <section id="reviews" className="scroll-mt-24 mx-auto max-w-7xl px-4 sm:px-6 py-12 sm:py-16">
           <header className="mb-8 sm:mb-12 text-center" data-aos="fade-up">
             <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Customer Reviews</h3>
             <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-300">
@@ -520,6 +569,20 @@ const toggleTheme = () => {
               <div>
                 <h3 className="font-semibold text-lg sm:text-xl">Email</h3>
                 <p className="text-gray-300">s3thifit@gmail.com</p>
+              </div>
+              {/* Instagram (contact info) */}
+              <div>
+                <h3 className="font-semibold text-lg sm:text-xl">Instagram</h3>
+                <a
+                  href="https://www.instagram.com/s3thifit"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-flex items-center gap-2 text-gray-300 hover:text-white"
+                  aria-label="Instagram @s3thifit"
+                >
+                  <InstagramIcon className="h-5 w-5" />
+                  <span>@s3thifit</span>
+                </a>
               </div>
               <div>
                 <h3 className="font-semibold text-lg sm:text-xl">Working Hours</h3>

@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 type Review = {
   author_name: string;
+  author_url?: String;
   profile_photo_url?: string;
   rating: number;
   text: string;
@@ -20,15 +21,29 @@ const cache: Record<string, CacheEntry> = {};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
   try {
-    const q = (req.query.q as string) || 'S3THIFIT | Personal Trainer';
+    const brand = (req.query.brand as string) || process.env.GOOGLE_BRAND_NAME || 'S3THIFIT';
+    const q = (req.query.q as string) || brand;
     const limit = Math.max(1, Math.min(10, parseInt((req.query.limit as string) || '3', 10)));
     const star = Math.max(1, Math.min(5, parseInt((req.query.star as string) || '5', 10)));
-    const key = JSON.stringify({ q, limit, star });
+    const nocache = req.query.nocache === '1';
 
-    // Serve from cache if fresh
+    const lat = parseFloat((req.query.lat as string) || process.env.GOOGLE_SEARCH_LAT || '');
+    const lng = parseFloat((req.query.lng as string) || process.env.GOOGLE_SEARCH_LNG || '');
+    const radius = parseInt((req.query.radius as string) || process.env.GOOGLE_SEARCH_RADIUS || '15000', 10); // meters
+    const region = (req.query.region as string) || process.env.GOOGLE_REGION || 'CA';
+    const city = (req.query.city as string) || process.env.GOOGLE_CITY || 'Toronto';
+    const province = (req.query.province as string) || process.env.GOOGLE_PROVINCE || 'ON';
+
+    const cacheKey = JSON.stringify({
+      q, brand, limit, star,
+      lat: Number.isFinite(lat) ? lat : undefined,
+      lng: Number.isFinite(lng) ? lng : undefined,
+      radius, region, city, province,
+    });
+
     const now = Date.now();
-    const cached = cache[key];
-    if (cached && now - cached.ts < CACHE_TTL_MS) {
+    const cached = cache[cacheKey];
+    if (!nocache && cached && now - cached.ts < CACHE_TTL_MS) {
       return res.status(200).json(cached.data);
     }
 
@@ -43,29 +58,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         ].slice(0, limit),
         message: 'Server missing GOOGLE_MAPS_API_KEY; returning fallback testimonials.',
       };
-      cache[key] = { data: fallback, ts: now };
+      cache[cacheKey] = { data: fallback, ts: now };
       return res.status(200).json(fallback);
     }
 
-    // 1) Find the place_id by text query
+    // ---- Find place by text (biased by lat/lng/region) ----
     const findUrl = new URL('https://maps.googleapis.com/maps/api/place/findplacefromtext/json');
     findUrl.searchParams.set('input', q);
     findUrl.searchParams.set('inputtype', 'textquery');
-    findUrl.searchParams.set('fields', 'place_id');
+    findUrl.searchParams.set('fields', 'place_id,name,formatted_address');
+    findUrl.searchParams.set('region', region);
+    if (Number.isFinite(lat) && Number.isFinite(lng)) {
+      findUrl.searchParams.set('locationbias', `circle:${radius}@${lat},${lng}`);
+    }
     findUrl.searchParams.set('key', API_KEY);
 
     const findRes = await fetch(findUrl.toString());
     if (!findRes.ok) throw new Error(`FindPlace error: ${findRes.status}`);
     const findJson = await findRes.json();
-    const placeId = findJson?.candidates?.[0]?.place_id as string | undefined;
-    if (!placeId) {
-      throw new Error('No place_id found for query');
-    }
 
-    // 2) Fetch place details with reviews
+    type Candidate = { place_id: string; name?: string; formatted_address?: string };
+    const candidates: Candidate[] = (findJson?.candidates || []) as Candidate[];
+    if (!candidates.length) throw new Error('No candidates from FindPlace');
+
+    const brandLower = brand.toLowerCase();
+    const byAddress = candidates.filter(c => {
+      const addr = (c.formatted_address || '').toLowerCase();
+      return addr.includes(city.toLowerCase()) || addr.includes(province.toLowerCase());
+    });
+    const pool = byAddress.length ? byAddress : candidates;
+    const preferred = pool.find(c => (c.name || '').toLowerCase().includes(brandLower));
+    const selected = preferred || pool[0];
+
+    const placeId = selected.place_id;
+    if (!placeId) throw new Error('No place_id on selected candidate');
+
+    // ---- Fetch reviews for placeId ----
     const detailsUrl = new URL('https://maps.googleapis.com/maps/api/place/details/json');
     detailsUrl.searchParams.set('place_id', placeId);
-    detailsUrl.searchParams.set('fields', 'reviews,rating,user_ratings_total,name,url');
+    detailsUrl.searchParams.set('fields', 'reviews(author_name,author_url,profile_photo_url,rating,text,relative_time_description),rating,user_ratings_total,name,url'); detailsUrl.searchParams.set('reviews_sort', 'newest');
     detailsUrl.searchParams.set('key', API_KEY);
 
     const detailsRes = await fetch(detailsUrl.toString());
@@ -73,9 +104,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const detailsJson = await detailsRes.json();
 
     const all = (detailsJson?.result?.reviews || []) as any[];
-    const filtered = all.filter((r) => (r?.rating ?? 0) >= star);
-    const mapped: Review[] = filtered.map((r) => ({
+    const filtered = all.filter(r => (r?.rating ?? 0) >= star);
+    const mapped: Review[] = filtered.map(r => ({
       author_name: r.author_name,
+      author_url: r.author_url,
       profile_photo_url: r.profile_photo_url,
       rating: r.rating,
       text: r.text,
@@ -87,7 +119,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       reviews: mapped,
     };
 
-    cache[key] = { data: payload, ts: now };
+    cache[cacheKey] = { data: payload, ts: now };
     return res.status(200).json(payload);
   } catch (err: any) {
     const payload: ApiResponse = {
@@ -99,9 +131,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
 }
 
-// Optional (Node runtime)
 export const config = {
-  api: {
-    bodyParser: false,
-  },
+  api: { bodyParser: false },
 };

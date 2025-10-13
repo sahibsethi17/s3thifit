@@ -11,11 +11,11 @@ export default function Assessment() {
       <Head>
         <title>Free Assessment – S3THIFIT</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
       </Head>
-<style jsx global>{`
+      <style jsx global>{`
         .brand-font {
           font-family: 'Bebas Neue', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
           letter-spacing: 0.02em;
@@ -99,24 +99,96 @@ export default function Assessment() {
 
               {/* Additional Info */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="goal" className="sr-only">Primary Goal</label>
-                  <select id="goal" name="goal" required className="w-full rounded-xl border border-gray-200 dark:border-gray-800 px-4 py-3 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-                    <option value="">Primary Goal</option>
-                    <option>Lose Weight</option>
-                    <option>Build Muscle</option>
-                    <option>Get Toned</option>
-                    <option>Improve Athletic Performance</option>
-                    <option>Rehab / Reduce Pain</option>
-                  </select>
-                </div>
+                {/* Primary Goal (checkboxes) */}
+                <fieldset className="sm:col-span-2">
+                  <legend className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                    Primary Goal <span className="text-xs text-gray-500">(select all that apply)</span>
+                  </legend>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <label className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        name="goals[]"
+                        value="Lose Weight"
+                        className="mt-1 h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                      />
+                      <span>Lose Weight</span>
+                    </label>
+
+                    <label className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        name="goals[]"
+                        value="Gain Muscle or Strength"
+                        className="mt-1 h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                      />
+                      <span>Gain Muscle or Strength</span>
+                    </label>
+
+                    <label className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        name="goals[]"
+                        value="Improve cardiovascular health"
+                        className="mt-1 h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                      />
+                      <span>Improve cardiovascular health</span>
+                    </label>
+
+                    <label className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        name="goals[]"
+                        value="Increase flexibility or mobility"
+                        className="mt-1 h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                      />
+                      <span>Increase flexibility or mobility</span>
+                    </label>
+
+                    <label className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        name="goals[]"
+                        value="General wellness and energy"
+                        className="mt-1 h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                      />
+                      <span>General wellness and energy</span>
+                    </label>
+
+                    <label className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        name="goals[]"
+                        value="Improve my diet"
+                        className="mt-1 h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                      />
+                      <span>Improve my diet</span>
+                    </label>
+                  </div>
+
+                  {/* "Other" free text */}
+                  <div className="mt-3">
+                    <label htmlFor="goals_other" className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+                      Other <span className="text-xs text-gray-500">(please specify)</span>
+                    </label>
+                    <input
+                      id="goals_other"
+                      name="goals_other"
+                      type="text"
+                      placeholder="Other goal..."
+                      className="w-full rounded-xl border border-gray-200 dark:border-gray-800 px-4 py-3 outline-none focus:ring-2 focus:ring-red-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                    />
+                  </div>
+                </fieldset>
                 <div>
                   <label htmlFor="experience" className="sr-only">Experience Level</label>
                   <select id="experience" name="experience" required className="w-full rounded-xl border border-gray-200 dark:border-gray-800 px-4 py-3 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-                    <option value="">Experience Level</option>
-                    <option>Beginner</option>
-                    <option>Intermediate</option>
-                    <option>Advanced</option>
+                    <option value="">Current Fitness Level</option>
+                    <option>Sedentary <span className="text-xs text-gray-500">(little to no exercise)</span></option>
+                    <option>Lightly Active <span className="text-xs text-gray-500">(light exercise 1-3 days/week)</span></option>
+                    <option>Moderately Active <span className="text-xs text-gray-500">(moderate exercise 3-5 days/week)</span></option>
+                    <option>Very Active <span className="text-xs text-gray-500">(intense exercise 6-7 days/week)</span></option>
                   </select>
                 </div>
                 <div>
@@ -173,10 +245,9 @@ export default function Assessment() {
                   <label htmlFor="timeline" className="sr-only">Timeline</label>
                   <select id="timeline" name="timeline" className="w-full rounded-xl border border-gray-200 dark:border-gray-800 px-4 py-3 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
                     <option value="">Timeline</option>
-                    <option>ASAP</option>
-                    <option>2–4 weeks</option>
-                    <option>1–3 months</option>
-                    <option>3+ months</option>
+                    <option>4-8 weeks</option>
+                    <option>3-6 months</option>
+                    <option>6+ months</option>
                   </select>
                 </div>
               </div>
@@ -187,7 +258,7 @@ export default function Assessment() {
               <textarea
                 id="message"
                 name="message"
-                placeholder="How can I help you?"
+                placeholder="Is there anything you would like me to know about your fitness journey or training preferences?"
                 rows={6}
                 required
                 className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 outline-none focus:ring-2 focus:ring-red-500"
