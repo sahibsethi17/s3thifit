@@ -228,7 +228,7 @@ export default function Assessment() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="height" className="sr-only">Height</label>
-                  <input id="height" name="height" type="text" placeholder="Height (e.g., 5'11&quot;)" className="w-full rounded-xl border border-gray-200 dark:border-gray-800 px-4 py-3 outline-none focus:ring-2 focus:ring-red-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100" />
+                  <input id="height" name="height" type="text" placeholder="Height" className="w-full rounded-xl border border-gray-200 dark:border-gray-800 px-4 py-3 outline-none focus:ring-2 focus:ring-red-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100" />
                 </div>
                 <div>
                   <label htmlFor="weight" className="sr-only">Weight</label>
