@@ -217,9 +217,9 @@ export default function Home() {
                 width={36}
                 height={36}
                 priority
-                className="h-9 w-9 rounded-full object-cover"
+                className="h-13 w-13 rounded-full object-cover"
               />
-              <span className="text-xl sm:text-2xl font-bold text-red-600 brand-font">S3THIFIT</span>
+              <span className="text-3xl sm:text-4xl font-bold text-red-600 brand-font">S3THIFIT</span>
             </Link>
 
             {/* Desktop links */}
