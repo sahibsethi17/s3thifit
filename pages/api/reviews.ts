@@ -49,14 +49,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     const API_KEY = process.env.GOOGLE_MAPS_API_KEY;
     if (!API_KEY) {
+      // Only genuine Google reviews are shown on the site, so there are no placeholder testimonials.
       const fallback: ApiResponse = {
         source: 'fallback',
-        reviews: [
-          { author_name: 'Emma R.', rating: 5, text: 'Sunil helped me lose 15 lbs in 8 weeks. The weekly check-ins and personalized plan were a game-changer!' },
-          { author_name: 'Michael T.', rating: 5, text: 'The best trainer I’ve worked with. Form cues were on point and the program was actually fun to stick to.' },
-          { author_name: 'Priya S.', rating: 5, text: 'Great experience! Nutrition guidance plus workouts made it easy to stay consistent and see results.' },
-        ].slice(0, limit),
-        message: 'Server missing GOOGLE_MAPS_API_KEY; returning fallback testimonials.',
+        reviews: [],
+        message: 'Server missing GOOGLE_MAPS_API_KEY; no reviews returned.',
       };
       cache[cacheKey] = { data: fallback, ts: now };
       return res.status(200).json(fallback);
