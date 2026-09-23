@@ -137,7 +137,6 @@ export default function Assessment() {
                 className="rounded-3xl bg-white p-6 sm:p-10 shadow-xl ring-1 ring-black/5 space-y-8"
               >
                 <input type="hidden" name="_subject" value="New Assessment Request – S3THIFIT" />
-                <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" />
                 <input type="hidden" name="page" value="assessment" />
 
                 <div>
