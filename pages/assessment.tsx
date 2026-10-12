@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useForm, ValidationError } from '@formspree/react';
 import { SiteNav, SiteFooter, PHONE_DISPLAY, PHONE_HREF } from '../components/SiteChrome';
 import { CheckIcon, PhoneIcon } from '../components/icons';
+import { trackAssessmentConversion } from '../lib/gtag';
 
 // Maps the ?service= param from the homepage "Get Started" buttons to a Preferred Training option
 const SERVICE_OPTIONS: Record<string, string> = {
@@ -48,6 +49,10 @@ export default function Assessment() {
       setTrainingType(SERVICE_OPTIONS[service]);
     }
   }, [router.query.service]);
+
+  useEffect(() => {
+    if (state.succeeded) trackAssessmentConversion();
+  }, [state.succeeded]);
 
   return (
     <>
