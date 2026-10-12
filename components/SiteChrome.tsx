@@ -26,20 +26,18 @@ const NAV_LINKS = [
   { href: '/#contact-info', label: 'Contact' },
 ];
 
-function Brand({ onClick }: { onClick?: () => void }) {
+function NavLogo({ onClick }: { onClick?: () => void }) {
   return (
-    <Link href="/" className="flex items-center gap-3" onClick={onClick}>
+    <Link href="/" className="flex items-center" onClick={onClick} aria-label="SethiFit home">
       <Image
-        src="/images/logo.JPG"
-        alt="S3THIFIT logo"
-        width={44}
-        height={44}
+        src="/images/sethifit-logo.png"
+        alt="SethiFit – Stronger Everyday"
+        width={1200}
+        height={617}
         priority
-        className="h-11 w-11 rounded-full object-cover ring-2 ring-white/10"
+        sizes="140px"
+        className="h-14 sm:h-16 w-auto"
       />
-      <span className="font-display text-3xl sm:text-4xl leading-none tracking-wide text-white">
-        S3THI<span className="text-brand">FIT</span>
-      </span>
     </Link>
   );
 }
@@ -60,12 +58,12 @@ export function SiteNav() {
 
   return (
     <nav
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`on-dark fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         solid ? 'bg-ink/90 backdrop-blur-lg border-b border-white/10' : 'bg-transparent border-b border-transparent'
       }`}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Brand onClick={close} />
+        <NavLogo onClick={close} />
 
         <ul className="hidden lg:flex items-center gap-8 text-sm font-medium text-white/80">
           {NAV_LINKS.map((l) => (
@@ -89,7 +87,7 @@ export function SiteNav() {
           </a>
           <Link
             href="/assessment"
-            className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-dark"
+            className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-ink shadow-lg shadow-brand/20 transition hover:bg-brand-dark"
           >
             Book Free Assessment
           </Link>
@@ -145,7 +143,7 @@ export function SiteNav() {
                 <Link
                   href="/assessment"
                   onClick={close}
-                  className="flex-1 rounded-full bg-brand px-5 py-3.5 text-center font-semibold text-white"
+                  className="flex-1 rounded-full bg-brand px-5 py-3.5 text-center font-semibold text-ink"
                 >
                   Book Free Assessment
                 </Link>
@@ -169,16 +167,18 @@ export function SiteNav() {
 
 export function SiteFooter() {
   return (
-    <footer id="contact-info" className="scroll-mt-20 bg-ink text-white/70">
+    <footer id="contact-info" className="on-dark scroll-mt-20 bg-ink text-white/70">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20 grid gap-12 md:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-2 max-w-md">
-          <Brand />
+          <Link href="/" className="inline-block" aria-label="SethiFit home">
+          <Image src="/images/sethifit-logo.png" alt="SethiFit – Stronger Everyday" width={1200} height={617} sizes="180px" className="h-20 w-auto" />
+        </Link>
           <p className="mt-5 leading-relaxed">
             Private 1-on-1 personal training in Brampton for muscle building, fat loss, strength and overall fitness.
           </p>
           <Link
             href="/assessment"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 font-semibold text-white transition hover:bg-brand-dark"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 font-semibold text-ink transition hover:bg-brand-dark"
           >
             Book Free Assessment <ArrowRightIcon className="h-4 w-4" />
           </Link>
@@ -188,23 +188,23 @@ export function SiteFooter() {
           <h3 className="font-display text-2xl tracking-wide text-white">Contact</h3>
           <ul className="mt-4 space-y-3">
             <li className="flex items-start gap-3">
-              <MapPinIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+              <MapPinIcon className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
               <span>Private training in Brampton, Ontario</span>
             </li>
             <li className="flex items-start gap-3">
-              <PhoneIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+              <PhoneIcon className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
               <a href={PHONE_HREF} className="hover:text-white">
                 {PHONE_DISPLAY}
               </a>
             </li>
             <li className="flex items-start gap-3">
-              <MailIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+              <MailIcon className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
               <a href={`mailto:${EMAIL}`} className="hover:text-white">
                 {EMAIL}
               </a>
             </li>
             <li className="flex items-start gap-3">
-              <InstagramIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+              <InstagramIcon className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
               <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white">
                 @s3thifit
               </a>

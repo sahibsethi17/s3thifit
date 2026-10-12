@@ -165,8 +165,8 @@ const stats = [
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <p className="flex items-center gap-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-brand">
-      <span className="h-px w-8 bg-brand" />
+    <p className="flex items-center gap-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+      <span className="h-px w-8 bg-accent" />
       {children}
     </p>
   );
@@ -176,7 +176,7 @@ function PrimaryCTA({ href = '/assessment', children, className = '' }: { href?:
   return (
     <Link
       href={href}
-      className={`group inline-flex items-center justify-center gap-3 rounded-full bg-brand px-7 py-4 text-center font-semibold text-white shadow-xl shadow-brand/30 transition hover:bg-brand-dark ${className}`}
+      className={`group inline-flex items-center justify-center gap-3 rounded-full bg-brand px-7 py-4 text-center font-semibold text-ink shadow-xl shadow-brand/20 transition hover:bg-brand-dark ${className}`}
     >
       {children}
       <ArrowRightIcon className="h-5 w-5 shrink-0 transition-transform group-hover:translate-x-1" />
@@ -192,7 +192,7 @@ function ReviewCard({ review, fromGoogle }: { review: Review; fromGoogle: boolea
   return (
     <article className="mb-6 break-inside-avoid rounded-2xl bg-white p-7 shadow-sm ring-1 ring-black/5">
       <div className="flex items-center justify-between">
-        <span className="font-display text-6xl leading-none text-brand">“</span>
+        <span className="font-display text-6xl leading-none text-accent">“</span>
         <span className="text-amber-400 tracking-widest" aria-label={`${review.rating} star rating`}>
           {'★★★★★'.slice(0, Math.round(review.rating))}
         </span>
@@ -201,7 +201,7 @@ function ReviewCard({ review, fromGoogle }: { review: Review; fromGoogle: boolea
       {details && (
         <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold">
           {details.goal && <span className="rounded-full bg-cream px-3 py-1 text-ink">Goal: {details.goal}</span>}
-          {details.result && <span className="rounded-full bg-brand/10 px-3 py-1 text-brand">Result: {details.result}</span>}
+          {details.result && <span className="rounded-full bg-brand/40 px-3 py-1 text-ink">Result: {details.result}</span>}
         </div>
       )}
 
@@ -212,7 +212,7 @@ function ReviewCard({ review, fromGoogle }: { review: Review; fromGoogle: boolea
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="mt-2 text-sm font-semibold text-brand hover:underline"
+          className="mt-2 text-sm font-semibold text-accent hover:underline"
         >
           {expanded ? 'Show less' : 'Read more'}
         </button>
@@ -270,7 +270,7 @@ function GoogleReviews() {
     return (
       <p className="text-center text-gray-600">
         Read what clients say on{' '}
-        <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-brand hover:underline">
+        <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-accent hover:underline">
           Google Reviews
         </a>
         .
@@ -306,7 +306,7 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
             animate={{ rotate: open ? 45 : 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 22 }}
             className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ring-1 transition-colors ${
-              open ? 'bg-brand text-white ring-brand' : 'bg-white ring-black/10'
+              open ? 'bg-brand text-ink ring-brand' : 'bg-white ring-black/10'
             }`}
           >
             <PlusIcon className="h-4 w-4" />
@@ -342,7 +342,7 @@ function StickyMobileCTA({ visible }: { visible: boolean }) {
           animate={{ y: 0 }}
           exit={{ y: '110%' }}
           transition={{ type: 'spring', stiffness: 320, damping: 32 }}
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-ink/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-lg lg:hidden"
+          className="on-dark fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-ink/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-lg lg:hidden"
         >
           <div className="flex items-center gap-3">
             <div className="min-w-0 flex-1 text-white">
@@ -351,7 +351,7 @@ function StickyMobileCTA({ visible }: { visible: boolean }) {
             </div>
             <Link
               href="/assessment"
-              className="shrink-0 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand/30"
+              className="shrink-0 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-ink shadow-lg shadow-brand/20"
             >
               Book Now
             </Link>
@@ -396,10 +396,10 @@ export default function Home() {
 
       <SiteNav />
 
-      <main className="bg-cream text-ink">
+      <main className="overflow-x-clip bg-cream text-ink">
         {/* ================= HERO ================= */}
-        <section ref={heroRef} className="relative overflow-hidden bg-ink text-white">
-          <div className="pointer-events-none absolute -top-40 -right-40 h-[36rem] w-[36rem] rounded-full bg-brand/25 blur-[140px]" />
+        <section ref={heroRef} className="on-dark relative overflow-hidden bg-ink text-white">
+          <div className="pointer-events-none absolute -top-40 -right-40 h-[36rem] w-[36rem] rounded-full bg-brand/15 blur-[140px]" />
           <div className="pointer-events-none absolute bottom-0 left-0 h-72 w-72 rounded-full bg-brand/10 blur-[120px]" />
 
           <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:px-8 pt-32 pb-16 sm:pt-36 lg:grid-cols-12 lg:gap-8 lg:pt-40 lg:pb-24">
@@ -414,7 +414,7 @@ export default function Home() {
 
               <h1 className="mt-6 font-display text-[3.4rem] leading-[0.92] sm:text-7xl lg:text-[4.6rem] xl:text-[5.4rem] tracking-wide">
                 Personal Training in Brampton That Gets You{' '}
-                <span className="text-brand">Stronger, Leaner &amp; More Confident</span>
+                <span className="text-accent">Stronger, Leaner &amp; More Confident</span>
               </h1>
 
               <p className="mt-6 max-w-xl text-lg sm:text-xl leading-relaxed text-white/70">
@@ -448,7 +448,7 @@ export default function Home() {
             <Reveal from="left" delay={0.15} className="relative lg:col-span-5">
               <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-[2rem] ring-1 ring-white/10">
                 <Image
-                  src="/images/coach-portrait.jpg"
+                  src="/images/studio-coaching.jpg"
                   alt="Sunil Sethi, certified personal trainer in Brampton"
                   fill
                   priority
@@ -462,8 +462,8 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="absolute -left-2 top-10 sm:left-0 lg:-left-10 rounded-2xl bg-white p-4 text-ink shadow-2xl max-w-[13rem]">
-                <p className="text-xs font-semibold uppercase tracking-wider text-brand">Free assessment</p>
+              <div className="absolute -left-2 top-10 sm:left-0 lg:-left-10 on-light rounded-2xl bg-white p-4 text-ink shadow-2xl max-w-[13rem]">
+                <p className="text-xs font-semibold uppercase tracking-wider text-accent">Free assessment</p>
                 <p className="mt-1 font-display text-3xl leading-none">45 Minutes</p>
                 <p className="mt-1 text-xs text-gray-500">No pressure · Personalized</p>
               </div>
@@ -472,14 +472,14 @@ export default function Home() {
         </section>
 
         {/* ================= MARQUEE ================= */}
-        <div className="overflow-hidden bg-brand py-4 text-white" aria-hidden="true">
+        <div className="overflow-hidden bg-brand py-4 text-ink" aria-hidden="true">
           <div className="flex w-max animate-marquee">
             {[0, 1].map((dup) => (
               <div key={dup} className="flex shrink-0 items-center">
                 {[...marqueeItems, ...marqueeItems].map((m, i) => (
                   <span key={i} className="flex items-center font-display text-2xl sm:text-3xl tracking-wider">
                     <span className="px-6">{m}</span>
-                    <span className="text-white/60">✦</span>
+                    <span className="text-ink/40">✦</span>
                   </span>
                 ))}
               </div>
@@ -504,15 +504,15 @@ export default function Home() {
                 <div className="col-span-2 grid grid-cols-2 gap-4 sm:flex sm:flex-col sm:pt-12">
                   <div className="relative aspect-[4/5] overflow-hidden rounded-3xl sm:aspect-[3/4]">
                     <Image
-                      src="/images/studio-coaching.jpg"
-                      alt="Sunil planning a client program in the private training space"
+                      src="/images/studio-plate.jpg"
+                      alt="Sunil loading a plate in the private training space"
                       fill
                       sizes="(min-width: 1024px) 220px, 40vw"
                       className="object-cover"
                     />
                   </div>
-                  <div className="rounded-3xl bg-ink p-5 text-white">
-                    <LockIcon className="h-6 w-6 text-brand" />
+                  <div className="on-dark rounded-3xl bg-ink p-5 text-white">
+                    <LockIcon className="h-6 w-6 text-accent" />
                     <p className="mt-3 font-display text-2xl leading-none tracking-wide">Private space</p>
                     <p className="mt-1 text-xs text-white/60">Just you and your coach</p>
                   </div>
@@ -525,7 +525,7 @@ export default function Home() {
               <h2 className="mt-5 font-display text-5xl sm:text-6xl lg:text-7xl leading-[0.92] tracking-wide">
                 Train Privately.
                 <br />
-                <span className="text-brand">Train With Purpose.</span>
+                <span className="bg-brand px-2 box-decoration-clone text-ink">Train With Purpose.</span>
               </h2>
               <p className="mt-7 text-xl font-semibold">No crowded commercial gym. No generic workout program.</p>
               <p className="mt-4 text-lg leading-relaxed text-gray-600">
@@ -539,7 +539,7 @@ export default function Home() {
                   'A program built for you, not copied from someone else',
                 ].map((t) => (
                   <li key={t} className="flex items-start gap-4">
-                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand text-white">
+                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand text-ink">
                       <CheckIcon className="h-3.5 w-3.5" />
                     </span>
                     <span className="text-gray-800">{t}</span>
@@ -552,7 +552,7 @@ export default function Home() {
         </section>
 
         {/* ================= GOALS ================= */}
-        <section id="specializations" className="scroll-mt-20 bg-ink py-20 sm:py-28 text-white">
+        <section id="specializations" className="on-dark scroll-mt-20 bg-ink py-20 sm:py-28 text-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div>
@@ -569,16 +569,16 @@ export default function Home() {
                 <Reveal
                   key={g.title}
                   delay={(i % 3) * 0.08}
-                  className="group relative bg-ink-2 p-6 sm:p-10 transition-colors duration-300 hover:bg-brand"
+                  className="group relative bg-ink-2 p-6 sm:p-10 transition-colors duration-300 hover:bg-brand hover:text-ink"
                 >
                   <div className="flex items-start justify-between">
-                    <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 text-brand transition-colors group-hover:bg-white/15 group-hover:text-white">
+                    <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 text-accent transition-colors group-hover:bg-ink/10 group-hover:text-ink">
                       <g.icon className="h-7 w-7" />
                     </span>
-                    <span className="font-display text-2xl text-white/20 group-hover:text-white/50">0{i + 1}</span>
+                    <span className="font-display text-2xl text-white/20 group-hover:text-ink/40">0{i + 1}</span>
                   </div>
                   <h3 className="mt-6 sm:mt-8 font-display text-3xl tracking-wide">{g.title}</h3>
-                  <p className="mt-3 leading-relaxed text-white/60 group-hover:text-white/90">{g.desc}</p>
+                  <p className="mt-3 leading-relaxed text-white/60 group-hover:text-ink/80">{g.desc}</p>
                 </Reveal>
               ))}
             </div>
@@ -600,21 +600,21 @@ export default function Home() {
                   key={svc.title}
                   delay={i * 0.1}
                   className={`relative flex flex-col rounded-3xl p-8 sm:p-10 transition-[translate] duration-300 hover:-translate-y-1 ${
-                    svc.featured ? 'bg-ink text-white shadow-2xl shadow-ink/30 lg:-my-4 lg:py-14' : 'bg-white ring-1 ring-black/5 shadow-sm'
+                    svc.featured ? 'on-dark bg-ink text-white shadow-2xl shadow-ink/30 lg:-my-4 lg:py-14' : 'bg-white ring-1 ring-black/5 shadow-sm'
                   }`}
                 >
                   {svc.featured && (
-                    <span className="absolute -top-3 left-8 rounded-full bg-brand px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white">
+                    <span className="absolute -top-3 left-8 rounded-full bg-brand px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-ink">
                       Most personal
                     </span>
                   )}
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">{svc.tag}</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">{svc.tag}</p>
                   <h3 className="mt-3 font-display text-4xl leading-none tracking-wide">{svc.title}</h3>
                   <p className={`mt-4 leading-relaxed ${svc.featured ? 'text-white/70' : 'text-gray-600'}`}>{svc.desc}</p>
                   <ul className={`mt-6 space-y-3 border-t pt-6 ${svc.featured ? 'border-white/10' : 'border-gray-100'}`}>
                     {svc.points.map((p) => (
                       <li key={p} className="flex items-center gap-3 text-sm">
-                        <CheckIcon className="h-4 w-4 shrink-0 text-brand" />
+                        <CheckIcon className="h-4 w-4 shrink-0 text-accent" />
                         {p}
                       </li>
                     ))}
@@ -624,8 +624,8 @@ export default function Home() {
                       href={`/assessment?service=${svc.service}`}
                       className={`group flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold transition ${
                         svc.featured
-                          ? 'bg-brand text-white hover:bg-brand-dark'
-                          : 'bg-ink text-white hover:bg-brand'
+                          ? 'bg-brand text-ink hover:bg-brand-dark'
+                          : 'bg-ink text-white hover:bg-brand hover:text-ink'
                       }`}
                     >
                       Get Started
@@ -639,7 +639,7 @@ export default function Home() {
             {/* Nutrition guidance */}
             <Reveal className="mt-10 grid gap-6 rounded-3xl bg-white p-8 sm:p-10 ring-1 ring-black/5 md:grid-cols-3 md:items-center">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">Included support</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Included support</p>
                 <h3 className="mt-2 font-display text-4xl leading-none tracking-wide">Nutrition Guidance</h3>
               </div>
               <div className="md:col-span-2">
@@ -657,7 +657,7 @@ export default function Home() {
         </section>
 
         {/* ================= WHY S3THIFIT ================= */}
-        <section id="why" className="scroll-mt-20 bg-ink py-20 sm:py-28 text-white">
+        <section id="why" className="on-dark scroll-mt-20 bg-ink py-20 sm:py-28 text-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               <Reveal className="relative overflow-hidden rounded-3xl bg-brand p-8 sm:p-10 md:col-span-2 lg:col-span-1 lg:row-span-3 flex flex-col justify-between min-h-[22rem]">
@@ -666,15 +666,15 @@ export default function Home() {
                   alt=""
                   fill
                   sizes="(min-width: 1024px) 400px, 100vw"
-                  className="object-cover opacity-25 mix-blend-multiply"
+                  className="object-cover opacity-20 mix-blend-multiply"
                 />
                 <div className="relative">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">The difference</p>
-                  <h2 className="mt-4 font-display text-5xl sm:text-6xl lg:text-7xl leading-[0.92] tracking-wide">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ink/70">The difference</p>
+                  <h2 className="mt-4 font-display text-5xl sm:text-6xl lg:text-7xl leading-[0.92] tracking-wide text-ink">
                     Why Train With S3THIFIT?
                   </h2>
                 </div>
-                <PrimaryCTA className="relative mt-10 self-start bg-white! text-ink! shadow-none! hover:bg-cream!">
+                <PrimaryCTA className="relative mt-10 self-start bg-ink! text-white! shadow-none! hover:bg-ink-2!">
                   Book Free Assessment
                 </PrimaryCTA>
               </Reveal>
@@ -685,7 +685,7 @@ export default function Home() {
                   delay={(i % 2) * 0.08}
                   className={`rounded-3xl bg-ink-2 p-8 ring-1 ring-white/5 ${i === 4 ? 'md:col-span-2 lg:col-span-2' : ''}`}
                 >
-                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand/15 text-brand">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/15 text-accent">
                     <p.icon className="h-6 w-6" />
                   </span>
                   <h3 className="mt-6 font-display text-3xl tracking-wide">{p.title}</h3>
@@ -709,9 +709,9 @@ export default function Home() {
                   className="object-cover"
                 />
               </div>
-              <div className="absolute -bottom-6 right-4 sm:-right-6 rounded-3xl bg-brand px-7 py-6 text-white shadow-2xl">
+              <div className="absolute -bottom-6 right-4 sm:-right-6 rounded-3xl bg-brand px-7 py-6 text-ink shadow-2xl">
                 <p className="font-display text-6xl leading-none"><CountUp value="6+" /></p>
-                <p className="mt-1 text-sm font-medium text-white/85">Years of coaching</p>
+                <p className="mt-1 text-sm font-medium text-ink/75">Years of coaching</p>
               </div>
             </Reveal>
 
@@ -742,7 +742,7 @@ export default function Home() {
                   'Muscle, fat loss, strength & fitness',
                 ].map((t) => (
                   <li key={t} className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-sm font-medium ring-1 ring-black/5">
-                    <CheckIcon className="h-4 w-4 shrink-0 text-brand" />
+                    <CheckIcon className="h-4 w-4 shrink-0 text-accent" />
                     {t}
                   </li>
                 ))}
@@ -753,7 +753,7 @@ export default function Home() {
         </section>
 
         {/* ================= TRANSFORMATIONS ================= */}
-        <section id="results" className="scroll-mt-20 bg-ink py-20 sm:py-28 text-white">
+        <section id="results" className="on-dark scroll-mt-20 bg-ink py-20 sm:py-28 text-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div>
@@ -782,7 +782,7 @@ export default function Home() {
                   </div>
                   <figcaption className="p-6">
                     {t.period && (
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">{t.period}</p>
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">{t.period}</p>
                     )}
                     <h3 className="mt-1 font-display text-3xl tracking-wide">{t.title}</h3>
                     {(t.goal || t.result) && (
@@ -794,15 +794,15 @@ export default function Home() {
                           </div>
                         )}
                         {t.result && (
-                          <div className="rounded-xl bg-brand/15 p-3">
-                            <dt className="text-xs uppercase tracking-wider text-brand">Result</dt>
+                          <div className="rounded-xl bg-accent/15 p-3">
+                            <dt className="text-xs uppercase tracking-wider text-accent">Result</dt>
                             <dd className="mt-1 font-medium">{t.result}</dd>
                           </div>
                         )}
                       </dl>
                     )}
                     {t.quote && (
-                      <blockquote className="mt-4 border-l-2 border-brand pl-4 text-sm italic text-white/70">
+                      <blockquote className="mt-4 border-l-2 border-accent pl-4 text-sm italic text-white/70">
                         “{t.quote}”{t.name && <span className="not-italic font-semibold text-white"> — {t.name}</span>}
                       </blockquote>
                     )}
@@ -810,14 +810,14 @@ export default function Home() {
                 </Reveal>
               ))}
 
-              <Reveal className="flex flex-col justify-between rounded-3xl bg-brand p-8">
+              <Reveal className="flex flex-col justify-between rounded-3xl bg-brand p-8 text-ink">
                 <div>
                   <p className="font-display text-5xl leading-[0.95] tracking-wide">Your transformation starts here.</p>
-                  <p className="mt-4 text-white/85">It all begins with a free, no-pressure 45-minute assessment.</p>
+                  <p className="mt-4 text-ink/75">It all begins with a free, no-pressure 45-minute assessment.</p>
                 </div>
                 <Link
                   href="/assessment"
-                  className="group mt-8 inline-flex items-center justify-between rounded-full bg-white px-6 py-4 font-semibold text-ink"
+                  className="group mt-8 inline-flex items-center justify-between rounded-full bg-ink px-6 py-4 font-semibold text-white"
                 >
                   Book Free Assessment
                   <ArrowRightIcon className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -860,13 +860,13 @@ export default function Home() {
         </section>
 
         {/* ================= FREE ASSESSMENT ================= */}
-        <section id="assessment" className="scroll-mt-20 relative overflow-hidden bg-ink py-20 sm:py-28 text-white">
-          <div className="pointer-events-none absolute -bottom-40 -left-40 h-[32rem] w-[32rem] rounded-full bg-brand/20 blur-[140px]" />
+        <section id="assessment" className="on-dark scroll-mt-20 relative overflow-clip bg-ink py-20 sm:py-28 text-white">
+          <div className="pointer-events-none absolute -bottom-40 -left-40 h-[32rem] w-[32rem] rounded-full bg-brand/10 blur-[140px]" />
           <div className="relative mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:px-8 lg:grid-cols-12">
             <Reveal className="lg:col-span-5 lg:sticky lg:top-28 lg:self-start">
               <Eyebrow>Your first step</Eyebrow>
               <h2 className="mt-5 font-display text-5xl sm:text-6xl lg:text-7xl leading-[0.92] tracking-wide">
-                What Happens During Your <span className="text-brand">Free Fitness Assessment?</span>
+                What Happens During Your <span className="text-accent">Free Fitness Assessment?</span>
               </h2>
               <div className="mt-7 flex flex-wrap gap-2">
                 {['45 minutes', 'No pressure', 'Personalized'].map((c) => (
@@ -884,9 +884,9 @@ export default function Home() {
                   as="li"
                   key={s.title}
                   delay={i * 0.06}
-                  className="group flex gap-6 rounded-3xl bg-ink-2 p-6 sm:p-8 ring-1 ring-white/5 transition-shadow hover:ring-brand/50"
+                  className="group flex gap-6 rounded-3xl bg-ink-2 p-6 sm:p-8 ring-1 ring-white/5 transition-shadow hover:ring-accent/50"
                 >
-                  <span className="font-display text-5xl sm:text-6xl leading-none text-brand">0{i + 1}</span>
+                  <span className="font-display text-5xl sm:text-6xl leading-none text-accent">0{i + 1}</span>
                   <div className="pt-1">
                     <h3 className="font-display text-3xl tracking-wide">{s.title}</h3>
                     <p className="mt-1 text-white/60">{s.desc}</p>
@@ -921,7 +921,7 @@ export default function Home() {
 
         {/* ================= FINAL CTA ================= */}
         <section ref={endRef} className="px-4 sm:px-6 lg:px-8 pb-20 sm:pb-28">
-          <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-ink px-6 py-20 sm:px-16 sm:py-28 text-center text-white">
+          <div className="on-dark relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-ink px-6 py-20 sm:px-16 sm:py-28 text-center text-white">
             <Image
               src="/images/wideshot-web.jpg"
               alt=""
@@ -929,7 +929,7 @@ export default function Home() {
               sizes="(min-width: 1280px) 1280px, 100vw"
               className="object-cover opacity-30"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-brand/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-brand/25" />
             <Reveal className="relative">
               <h2 className="font-display text-5xl sm:text-7xl lg:text-8xl leading-[0.9] tracking-wide">Ready to Get Started?</h2>
               <p className="mx-auto mt-6 max-w-xl text-lg sm:text-xl text-white/75">

@@ -34,7 +34,7 @@ const EXPECT = [
 ];
 
 const field =
-  'w-full rounded-xl border border-black/10 bg-cream/60 px-4 py-3.5 text-ink placeholder:text-gray-500 outline-none transition focus:border-brand focus:bg-white focus:ring-4 focus:ring-brand/10';
+  'w-full rounded-xl border border-black/10 bg-cream/60 px-4 py-3.5 text-ink placeholder:text-gray-500 outline-none transition focus:border-ink focus:bg-white focus:ring-4 focus:ring-brand/60';
 const labelCls = 'mb-1.5 block text-sm font-semibold text-ink';
 const optionalCls = 'font-normal text-gray-500';
 
@@ -67,16 +67,16 @@ export default function Assessment() {
 
       <SiteNav />
 
-      <main className="bg-cream text-ink">
-        <section className="relative overflow-hidden bg-ink text-white">
-          <div className="pointer-events-none absolute -top-40 -right-40 h-[32rem] w-[32rem] rounded-full bg-brand/25 blur-[140px]" />
+      <main className="overflow-x-clip bg-cream text-ink">
+        <section className="on-dark relative overflow-hidden bg-ink text-white">
+          <div className="pointer-events-none absolute -top-40 -right-40 h-[32rem] w-[32rem] rounded-full bg-brand/15 blur-[140px]" />
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-36 pb-28 sm:pb-32">
-            <p className="flex items-center gap-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-brand">
-              <span className="h-px w-8 bg-brand" />
+            <p className="flex items-center gap-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+              <span className="h-px w-8 bg-accent" />
               Free fitness assessment
             </p>
             <h1 className="mt-5 max-w-4xl font-display text-5xl sm:text-6xl lg:text-8xl leading-[0.92] tracking-wide">
-              Book Your Free <span className="text-brand">45-Minute</span> Fitness Assessment
+              Book Your Free <span className="text-accent">45-Minute</span> Fitness Assessment
             </h1>
             <div className="mt-7 flex flex-wrap gap-2">
               {['45 minutes', 'No pressure', 'Personalized'].map((c) => (
@@ -96,7 +96,7 @@ export default function Assessment() {
               <ul className="mt-5 space-y-4">
                 {EXPECT.map((t) => (
                   <li key={t} className="flex items-start gap-3 text-sm text-gray-700">
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand text-white">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand text-ink">
                       <CheckIcon className="h-3 w-3" />
                     </span>
                     {t}
@@ -104,10 +104,10 @@ export default function Assessment() {
                 ))}
               </ul>
             </div>
-            <div className="rounded-3xl bg-ink p-7 text-white">
+            <div className="on-dark rounded-3xl bg-ink p-7 text-white">
               <p className="text-sm text-white/60">Prefer to talk first?</p>
-              <a href={PHONE_HREF} className="mt-2 flex items-center gap-3 font-display text-3xl tracking-wide hover:text-brand">
-                <PhoneIcon className="h-6 w-6 text-brand" />
+              <a href={PHONE_HREF} className="mt-2 flex items-center gap-3 font-display text-3xl tracking-wide hover:text-accent">
+                <PhoneIcon className="h-6 w-6 text-accent" />
                 {PHONE_DISPLAY}
               </a>
               <p className="mt-2 text-sm text-white/60">Call or text anytime during working hours.</p>
@@ -122,14 +122,14 @@ export default function Assessment() {
                 role="status"
                 aria-live="polite"
               >
-                <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-brand text-white">
+                <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-brand text-ink">
                   <CheckIcon className="h-8 w-8" />
                 </span>
                 <h2 className="mt-6 font-display text-5xl tracking-wide">Request received!</h2>
                 <p className="mt-3 text-gray-600">
                   Thanks! I’ll be in touch within 24 hours to book your free assessment.
                 </p>
-                <Link href="/" className="mt-8 inline-block rounded-full bg-ink px-6 py-3 font-semibold text-white hover:bg-brand">
+                <Link href="/" className="mt-8 inline-block rounded-full bg-ink px-6 py-3 font-semibold text-white hover:bg-brand hover:text-ink">
                   ← Back to Home
                 </Link>
               </div>
@@ -218,9 +218,9 @@ export default function Assessment() {
                     {GOAL_OPTIONS.map((g) => (
                       <label
                         key={g}
-                        className="flex cursor-pointer items-center gap-3 rounded-xl border border-black/10 px-4 py-3.5 transition hover:border-black/30 has-[:checked]:border-brand has-[:checked]:bg-brand/5"
+                        className="flex cursor-pointer items-center gap-3 rounded-xl border border-black/10 px-4 py-3.5 transition hover:border-black/30 has-[:checked]:border-ink has-[:checked]:bg-brand/30"
                       >
-                        <input type="checkbox" name="goals[]" value={g} className="h-4 w-4 accent-[#e11d2a]" />
+                        <input type="checkbox" name="goals[]" value={g} className="h-4 w-4 accent-ink" />
                         <span className="text-sm font-medium">{g}</span>
                       </label>
                     ))}
@@ -320,7 +320,7 @@ export default function Assessment() {
                 <button
                   type="submit"
                   disabled={state.submitting}
-                  className="w-full rounded-full bg-brand py-4 text-lg font-semibold text-white shadow-xl shadow-brand/30 transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full rounded-full bg-brand py-4 text-lg font-semibold text-ink shadow-xl shadow-brand/20 transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {state.submitting ? 'Sending…' : 'Request My Free Assessment'}
                 </button>

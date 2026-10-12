@@ -3,6 +3,8 @@
 @theme inline {
   --font-display: var(--font-bebas), Impact, "Arial Narrow", sans-serif;
   --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Accent for text/icons: deep olive on light surfaces, logo lime inside .on-dark */
+  --color-accent: var(--accent);
 }
 
 @theme {
@@ -10,8 +12,11 @@
   --color-ink-2: #141416;
   --color-ink-3: #1c1c1f;
   --color-cream: #f6f4f0;
-  --color-brand: #e11d2a;
-  --color-brand-dark: #b9141f;
+  /* SethiFit logo lime. Always pair fills with dark (ink) text: white on lime is unreadable */
+  --color-brand: #d7fa00;
+  --color-brand-dark: #c3e300;
+  /* Same hue, dark enough for text on cream/white (6:1 contrast) */
+  --color-brand-deep: #4d6400;
 
   --animate-marquee: marquee 40s linear infinite;
 
@@ -19,6 +24,15 @@
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
   }
+}
+
+:root,
+.on-light {
+  --accent: #4d6400; /* brand-deep */
+}
+
+.on-dark {
+  --accent: #d7fa00; /* brand */
 }
 
 html {
